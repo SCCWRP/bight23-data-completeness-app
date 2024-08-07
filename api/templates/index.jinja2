@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {# icon not working - may need to create a route with the correct mime type image/x-icon #}
+    <link rel="icon" src="{{url_for('static',filename = 'images/sccwrp-logo.jpeg')}}" type="image/jpeg"> 
+    <meta charset="UTF-8">
+    <title>Bight 23 Data Collection Completion Reporting Tool</title>
+    
+    <link href="{{url_for('static', filename='index.css')}}" rel="stylesheet"/>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="{{url_for('static', filename='index.js')}}"></script>
+    
+</body>
+</html>

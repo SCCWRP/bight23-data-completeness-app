@@ -1,0 +1,34 @@
+{
+  "name": "bight23completeness",
+  "version": "1.0.0",
+  "description": "A React application for viewing the status of the data collection for the bight program, specifically the 2023 survey in this case",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild ./src/index.jsx --bundle --outdir=./api/static --minify --sourcemap --target=es2015",
+    "serve": "sudo ./docker/deployserver.sh",
+    "restart": "sudo docker container restart bight23-completeness-report",
+    "logs": "sudo docker container logs -f bight23-completeness-report",
+    "clearlogs": "sudo truncate -s 0 $(docker inspect --format=\"{{.LogPath}}\" bight23-completeness-report)",
+    "ipython": "sudo docker container exec -it bight23-completeness-report ipython",
+    "dev": "esbuild ./src/index.jsx --bundle --outdir=./api/static --sourcemap --target=es2015 --watch"
+  },
+  "keywords": [
+    "bight",
+    "bight23",
+    "data",
+    "data-completeness",
+    "report",
+    "reporting-tool"
+  ],
+  "author": "Robert Butler",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.23.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
