@@ -6,6 +6,7 @@ import DropdownSelector from './components/DropdownSelector';
 // Styles
 import './styles/generic.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/modal.css'; // Import the custom CSS for the modal
 
 function App() {
     // Datatype options
@@ -23,6 +24,7 @@ function App() {
         unfinished_station_data: [],
         finished_station_data: [],
     });
+    const [orderedColumns, setOrderedColumns] = useState([]);
 
     // Fetch Datatypes
     useEffect(() => {
@@ -98,7 +100,12 @@ function App() {
         })
         .then((response) => response.json())
         .then((data) => {
-            setStationData(data);
+            setStationData({
+                all_station_data: data.all_station_data,
+                unfinished_station_data: data.unfinished_station_data,
+                finished_station_data: data.finished_station_data,
+            });
+            setOrderedColumns(data.ordered_columns);
             setShowModal(true);
         })
         .catch((error) => {
@@ -144,7 +151,7 @@ function App() {
                     <p>No data available</p>
                 )}
             </div>
-            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} />
+            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={orderedColumns} />
         </div>
     );
 }

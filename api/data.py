@@ -150,19 +150,12 @@ def station_data():
         , 
         eng
     )
-    
-    print('all_station_data')
-    print(all_station_data)
-    print('unfinished_station_data')
-    print(unfinished_station_data)
-    print('finished_station_data')
-    print(finished_station_data)
-
      
     return jsonify(
         all_station_data = all_station_data.fillna('').to_dict(orient='records'), 
         unfinished_station_data = unfinished_station_data.fillna('').to_dict(orient='records'), 
-        finished_station_data = finished_station_data.fillna('').to_dict(orient='records')
+        finished_station_data = finished_station_data.fillna('').to_dict(orient='records'),
+        ordered_columns = list(all_station_data.columns)
     ), 200
 
 
