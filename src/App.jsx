@@ -173,6 +173,9 @@ function App() {
                     )}
                 </div>
             </div>
+            <br />
+            <h6>(You may click on rows of the table for more detailed information)</h6>
+            <br />
             <div>
                 {currentReport.length > 0 ? (
                     <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} orderedColumns={mainOrderedColumns} />
