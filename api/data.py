@@ -120,6 +120,53 @@ def groupings():
 
 
 
+@data_api.route('/station-data', methods=['GET', 'POST'])
+def station_data():
+    
+    eng = g.eng
+
+    request_data = request.json
+
+    all_stations = request_data.get('all_stations')
+    unfinished_stations = request_data.get('unfinished_stations')
+    finished_stations = request_data.get('finished_stations')
+
+    all_stations = [str(stationid).strip() for stationid in all_stations.split(',')] if all_stations is not None else []
+    unfinished_stations = [str(stationid).strip() for stationid in unfinished_stations.split(',')] if unfinished_stations is not None else []
+    finished_stations = [str(stationid).strip() for stationid in finished_stations.split(',')] if finished_stations is not None else []
+    
+    all_station_data = pd.read_sql(
+        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(all_stations)}') """
+        , 
+        eng
+    )
+    unfinished_station_data = pd.read_sql(
+        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(unfinished_stations)}') """
+        , 
+        eng
+    )
+    finished_station_data = pd.read_sql(
+        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(finished_stations)}') """
+        , 
+        eng
+    )
+    
+    print('all_station_data')
+    print(all_station_data)
+    print('unfinished_station_data')
+    print(unfinished_station_data)
+    print('finished_station_data')
+    print(finished_station_data)
+
+     
+    return jsonify(
+        all_station_data = all_station_data.fillna('').to_dict(orient='records'), 
+        unfinished_station_data = unfinished_station_data.fillna('').to_dict(orient='records'), 
+        finished_station_data = finished_station_data.fillna('').to_dict(orient='records')
+    ), 200
+
+
+
 
 @data_api.errorhandler(Exception)
 def handle_exception(e):

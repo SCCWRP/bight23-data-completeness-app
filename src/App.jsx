@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-// Component Imports
+import Table from './components/Table';
 import DropdownSelector from './components/DropdownSelector';
 
 // Styles
@@ -76,7 +75,7 @@ function App() {
             });
     }, [dtype, grouping]);
 
-    const specialKeys = ['row_id','all_stations', 'finished_stations', 'unfinished_stations'];
+    const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations'];
 
     return (
         <div className="container">
@@ -109,34 +108,7 @@ function App() {
             </div>
             <div>
                 {currentReport.length > 0 ? (
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                {Object.keys(currentReport[0])
-                                    .filter((key) => !specialKeys.includes(key))
-                                    .map((key) => (
-                                        <th key={key}>{key}</th>
-                                    ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentReport.map((item, index) => (
-                                <tr
-                                    key={index}
-                                    data-row-id={item.row_id}
-                                    data-all-stations={JSON.stringify(item.all_stations)}
-                                    data-finished-stations={JSON.stringify(item.finished_stations)}
-                                    data-unfinished-stations={JSON.stringify(item.unfinished_stations)}
-                                >
-                                    {Object.entries(item)
-                                        .filter(([key]) => !specialKeys.includes(key))
-                                        .map(([key, value], i) => (
-                                            <td key={i}>{value}</td>
-                                        ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table data={currentReport} specialKeys={specialKeys} />
                 ) : (
                     <p>No data available</p>
                 )}
