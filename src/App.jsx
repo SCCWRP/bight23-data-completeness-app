@@ -68,12 +68,15 @@ function App() {
         fetch(`completeness-report-json?${params.toString()}`)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data.data);
                 setCurrentReport(data.data);
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }, [dtype, grouping]);
+
+    const specialKeys = ['row_id','all_stations', 'finished_stations', 'unfinished_stations'];
 
     return (
         <div className="container">
@@ -109,17 +112,27 @@ function App() {
                     <table className="table">
                         <thead>
                             <tr>
-                                {Object.keys(currentReport[0]).map((key) => (
-                                    <th key={key}>{key}</th>
-                                ))}
+                                {Object.keys(currentReport[0])
+                                    .filter((key) => !specialKeys.includes(key))
+                                    .map((key) => (
+                                        <th key={key}>{key}</th>
+                                    ))}
                             </tr>
                         </thead>
                         <tbody>
                             {currentReport.map((item, index) => (
-                                <tr key={index}>
-                                    {Object.values(item).map((value, i) => (
-                                        <td key={i}>{value}</td>
-                                    ))}
+                                <tr
+                                    key={index}
+                                    data-row-id={item.row_id}
+                                    data-all-stations={JSON.stringify(item.all_stations)}
+                                    data-finished-stations={JSON.stringify(item.finished_stations)}
+                                    data-unfinished-stations={JSON.stringify(item.unfinished_stations)}
+                                >
+                                    {Object.entries(item)
+                                        .filter(([key]) => !specialKeys.includes(key))
+                                        .map(([key, value], i) => (
+                                            <td key={i}>{value}</td>
+                                        ))}
                                 </tr>
                             ))}
                         </tbody>

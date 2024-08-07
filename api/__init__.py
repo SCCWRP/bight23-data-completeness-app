@@ -54,13 +54,29 @@ app.config['REPORT_TYPES'] = {
         'stratum': 'vw_benthic_infauna_stratum_completeness_report',
         'agency' : 'vw_benthic_infauna_agency_completeness_report'
     },
-    'trawl': {
-        'stratum': 'vw_trawl_data_stratum_completeness_report',
-        'agency' : 'vw_trawl_data_agency_completeness_report'
-    },
     'microplastics': {
         'stratum': 'vw_microplastics_stratum_completeness_report',
         'agency' : 'vw_microplastics_agency_completeness_report'
+    },
+    'trawl_field': {
+        'stratum': 'vw_trawl_field_stratum_completeness_report',
+        'agency' : 'vw_trawl_field_agency_completeness_report'
+    },
+    'fish': {
+        'stratum': 'vw_fish_stratum_completeness_report',
+        'agency' : 'vw_fish_agency_completeness_report'
+    },
+    'invert': {
+        'stratum': 'vw_invert_stratum_completeness_report',
+        'agency' : 'vw_invert_agency_completeness_report'
+    },
+    'debris': {
+        'stratum': 'vw_debris_stratum_completeness_report',
+        'agency' : 'vw_debris_agency_completeness_report'
+    },
+    'ptsensor': {
+        'stratum': 'vw_ptsensor_stratum_completeness_report',
+        'agency' : 'vw_ptsensor_agency_completeness_report'
     },
 }
 

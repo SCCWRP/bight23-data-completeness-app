@@ -48,9 +48,29 @@ def completeness_report_json():
         return jsonify(resp), 400
     
     # Select the data from the view and return to the browser
-    data = pd.read_sql(f"SELECT * FROM {report_types.get(dtype).get(grouping)};", eng)
+    data = pd.read_sql(
+        f"""
+            SELECT 
+                row_id, 
+                {grouping}, 
+                assigned_parameter, 
+                n_stations, 
+                n_finished_stations, 
+                percent_completion, 
+                unfinished_stations, 
+                finished_stations, 
+                all_stations  
+            FROM 
+                {report_types.get(dtype).get(grouping)};
+        """, 
+        eng
+    )
+    jsondata = data.to_dict(orient='records')
+
+    print("jsondata")
+    print(jsondata)
     
-    return jsonify(data = data.to_dict(orient='records')), 200
+    return jsonify(data = jsondata), 200
 
 
 
