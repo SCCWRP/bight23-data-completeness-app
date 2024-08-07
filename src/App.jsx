@@ -28,6 +28,8 @@ function App() {
     const [modalOrderedColumns, setModalOrderedColumns] = useState([]);
     const [loading, setLoading] = useState(false); // Loading state
 
+    const [modalTitle, setModalTitle] = useState(''); // Modal title state
+
     // Fetch Datatypes
     useEffect(() => {
         const fetchDtypes = async () => {
@@ -112,6 +114,10 @@ function App() {
             finished_stations: row.dataset.finishedStations,
         };
 
+        const groupingValue = row.dataset[grouping];
+        const assignedParameter = row.dataset.assignedParameter;
+
+
         try {
             const response = await fetch('station-data', {
                 method: 'POST',
@@ -127,6 +133,7 @@ function App() {
                 finished_station_data: data.finished_station_data,
             });
             setModalOrderedColumns(data.ordered_columns);
+            setModalTitle(`Station Data for ${groupingValue} for the parameter ${assignedParameter}`);
             setShowModal(true);
         } catch (error) {
             console.error('Error:', error);
@@ -173,7 +180,7 @@ function App() {
                     <p>No data available</p>
                 )}
             </div>
-            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={modalOrderedColumns} />
+            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={modalOrderedColumns} title={modalTitle}/>
             {loading && <LoadingModal />} {/* Show loading modal when loading */}
         </div>
     );

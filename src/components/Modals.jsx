@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Tab, Tabs, Spinner } from 'react-bootstrap';
 
-export const StationDataModal = ({ show, handleClose, stationData, orderedColumns }) => {
+export const StationDataModal = ({ show, handleClose, stationData, orderedColumns, title = 'Station Data' }) => {
     const { all_station_data, unfinished_station_data, finished_station_data } = stationData;
 
     const renderTable = (data) => {
@@ -34,7 +34,7 @@ export const StationDataModal = ({ show, handleClose, stationData, orderedColumn
     return (
         <Modal show={show} onHide={handleClose} size="xl" className="station-data-modal">
             <Modal.Header closeButton>
-                <Modal.Title>Station Data</Modal.Title>
+                <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="station-data-modal-body">
                 <Tabs defaultActiveKey="all_stations">
