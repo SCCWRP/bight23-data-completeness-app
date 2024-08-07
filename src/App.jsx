@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from './components/Table';
+import StationDataModal from './components/Modals';
 import DropdownSelector from './components/DropdownSelector';
 
 // Styles
@@ -16,6 +17,12 @@ function App() {
     const [grouping, setGrouping] = useState('');
 
     const [currentReport, setCurrentReport] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [stationData, setStationData] = useState({
+        all_station_data: [],
+        unfinished_station_data: [],
+        finished_station_data: [],
+    });
 
     // Fetch Datatypes
     useEffect(() => {
@@ -75,6 +82,30 @@ function App() {
             });
     }, [dtype, grouping]);
 
+    const handleRowClick = (row) => {
+        const postData = {
+            all_stations: row.dataset.allStations,
+            unfinished_stations: row.dataset.unfinishedStations,
+            finished_stations: row.dataset.finishedStations,
+        };
+
+        fetch('station-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            setStationData(data);
+            setShowModal(true);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
+
     const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations'];
 
     return (
@@ -108,11 +139,12 @@ function App() {
             </div>
             <div>
                 {currentReport.length > 0 ? (
-                    <Table data={currentReport} specialKeys={specialKeys} />
+                    <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} />
                 ) : (
                     <p>No data available</p>
                 )}
             </div>
+            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} />
         </div>
     );
 }
