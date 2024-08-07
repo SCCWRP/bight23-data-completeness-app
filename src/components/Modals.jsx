@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Tab, Tabs } from 'react-bootstrap';
+import { Modal, Tab, Tabs, Spinner } from 'react-bootstrap';
 
-const StationDataModal = ({ show, handleClose, stationData, orderedColumns }) => {
+export const StationDataModal = ({ show, handleClose, stationData, orderedColumns }) => {
     const { all_station_data, unfinished_station_data, finished_station_data } = stationData;
 
     const renderTable = (data) => {
@@ -53,4 +53,14 @@ const StationDataModal = ({ show, handleClose, stationData, orderedColumns }) =>
     );
 };
 
-export default StationDataModal;
+
+
+export const LoadingModal = () => (
+    <Modal show centered backdrop="static" keyboard={false}>
+        <Modal.Body className="d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+                <span className="sr-only">.</span>
+            </Spinner>
+        </Modal.Body>
+    </Modal>
+);

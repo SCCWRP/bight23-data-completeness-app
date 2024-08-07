@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from './components/Table';
-import StationDataModal from './components/Modals';
+import {StationDataModal, LoadingModal} from './components/Modals';
 import DropdownSelector from './components/DropdownSelector';
 
 // Styles
@@ -26,9 +26,11 @@ function App() {
     });
     const [mainOrderedColumns, setMainOrderedColumns] = useState([]);
     const [modalOrderedColumns, setModalOrderedColumns] = useState([]);
+    const [loading, setLoading] = useState(false); // Loading state
 
     // Fetch Datatypes
     useEffect(() => {
+        setLoading(true);
         fetch('dtypes') // Your API endpoint for fetching datatypes
             .then((response) => response.json())
             .then((data) => {
@@ -37,9 +39,11 @@ function App() {
                 if (data.dtypes.length > 0) {
                     setDtype(data.dtypes[0]);
                 }
+                setLoading(false);
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setLoading(false);
             });
     }, []);
 
@@ -47,6 +51,7 @@ function App() {
     useEffect(() => {
         if (!dtype) return;
 
+        setLoading(true);
         const params = new URLSearchParams({ dtype });
 
         fetch(`groupings?${params.toString()}`) // Your API endpoint for fetching groupings
@@ -59,9 +64,11 @@ function App() {
                 } else {
                     setGrouping(''); // Clear grouping if no groupings are available
                 }
+                setLoading(false);
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setLoading(false);
             });
     }, [dtype]);
 
@@ -69,6 +76,7 @@ function App() {
     useEffect(() => {
         if (!dtype || !grouping) return;
 
+        setLoading(true);
         const params = new URLSearchParams({
             dtype,
             grouping,
@@ -79,13 +87,16 @@ function App() {
             .then((data) => {
                 setCurrentReport(data.data);
                 setMainOrderedColumns(data.ordered_columns);
+                setLoading(false);
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setLoading(false);
             });
     }, [dtype, grouping]);
 
     const handleRowClick = (row) => {
+        setLoading(true);
         const postData = {
             all_stations: row.dataset.allStations,
             unfinished_stations: row.dataset.unfinishedStations,
@@ -108,9 +119,11 @@ function App() {
             });
             setModalOrderedColumns(data.ordered_columns);
             setShowModal(true);
+            setLoading(false);
         })
         .catch((error) => {
             console.error('Error:', error);
+            setLoading(false);
         });
     };
 
@@ -153,6 +166,7 @@ function App() {
                 )}
             </div>
             <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={modalOrderedColumns} />
+            {loading && <LoadingModal />} {/* Show loading modal when loading */}
         </div>
     );
 }
