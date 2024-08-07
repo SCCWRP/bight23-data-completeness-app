@@ -20,7 +20,7 @@ function App() {
 
     // Fetch Datatypes
     useEffect(() => {
-        fetch('dtypes') // Your API endpoint for fetching site names
+        fetch('dtypes') // Your API endpoint for fetching datatypes
             .then((response) => response.json())
             .then((data) => {
                 setDtypes(data.dtypes);
@@ -40,13 +40,15 @@ function App() {
 
         const params = new URLSearchParams({ dtype });
 
-        fetch(`groupings?${params.toString()}`) // Your API endpoint for fetching site names
+        fetch(`groupings?${params.toString()}`) // Your API endpoint for fetching groupings
             .then((response) => response.json())
             .then((data) => {
                 setGroupings(data.groupings);
                 // Set current grouping to the first one if available
                 if (data.groupings.length > 0) {
                     setGrouping(data.groupings[0]);
+                } else {
+                    setGrouping(''); // Clear grouping if no groupings are available
                 }
             })
             .catch((error) => {
@@ -85,6 +87,7 @@ function App() {
                             options={dtypes}
                             selectedOption={dtype}
                             onSelectOption={(e) => setDtype(e.target.value)}
+                            onChange={(e) => setDtype(e.target.value)}
                         />
                     )}
                 </div>
@@ -96,6 +99,7 @@ function App() {
                             options={groupings}
                             selectedOption={grouping}
                             onSelectOption={(e) => setGrouping(e.target.value)}
+                            onChange={(e) => setGrouping(e.target.value)}
                         />
                     )}
                 </div>
