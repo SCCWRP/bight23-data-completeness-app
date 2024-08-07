@@ -3,15 +3,11 @@ import React, { useState, useEffect } from 'react';
 // Component Imports
 import DropdownSelector from './components/DropdownSelector';
 
-
-
 // Styles
-import './styles/generic.css'
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
+import './styles/generic.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-
     // Datatype options
     const [dtypes, setDtypes] = useState([]);
     const [dtype, setDtype] = useState('');
@@ -22,41 +18,36 @@ function App() {
 
     const [currentReport, setCurrentReport] = useState([]);
 
-
-
     // Fetch Datatypes
     useEffect(() => {
         fetch('dtypes') // Your API endpoint for fetching site names
             .then((response) => response.json())
             .then((data) => {
-                // Set datatypes option
                 setDtypes(data.dtypes);
-                // set current dtype to the first one
-                setDtype(
-                    d => dtypes[0]
-                );
+                // Set current dtype to the first one if available
+                if (data.dtypes.length > 0) {
+                    setDtype(data.dtypes[0]);
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }, []);
-    
+
     // Fetch Groupings
     useEffect(() => {
-        
-        const params = new URLSearchParams({
-            dtype: dtype
-        });
+        if (!dtype) return;
+
+        const params = new URLSearchParams({ dtype });
 
         fetch(`groupings?${params.toString()}`) // Your API endpoint for fetching site names
             .then((response) => response.json())
             .then((data) => {
-                // Set datatypes option
-                setGroupings(data.dtypes);
-                // set current dtype to the first one
-                setGrouping(
-                    d => groupings[0]
-                );
+                setGroupings(data.groupings);
+                // Set current grouping to the first one if available
+                if (data.groupings.length > 0) {
+                    setGrouping(data.groupings[0]);
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -65,24 +56,22 @@ function App() {
 
     // Fetch data when dtype or grouping is changed
     useEffect(() => {
+        if (!dtype || !grouping) return;
+
         const params = new URLSearchParams({
-            dtype: dtype,
-            grouping: grouping
-        })
+            dtype,
+            grouping,
+        });
 
         fetch(`completeness-report-json?${params.toString()}`)
             .then((response) => response.json())
             .then((data) => {
-                setCurrentReport(data.data)
+                setCurrentReport(data.data);
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-        
     }, [dtype, grouping]);
-
-
-
 
     return (
         <div className="container">
@@ -90,26 +79,29 @@ function App() {
             <div className="row mb-3">
                 <div className="col-md-6">
                     <label htmlFor="dtype-select">Select Datatype:</label>
-                    {dtypes && <DropdownSelector 
-                        id="dtype-select" 
-                        options={dtypes} 
-                        selectedOption={dtype} 
-                        onSelectOption={(e) => setDtype(e.target.value)} 
-                        onChange={(e) => setDtype(e.target.value)} 
-                    />}
+                    {dtypes.length > 0 && (
+                        <DropdownSelector
+                            id="dtype-select"
+                            options={dtypes}
+                            selectedOption={dtype}
+                            onSelectOption={(e) => setDtype(e.target.value)}
+                        />
+                    )}
                 </div>
                 <div className="col-md-6">
                     <label htmlFor="grouping-select">Select Grouping:</label>
-                    {groupings && <DropdownSelector 
-                        id="grouping-select" 
-                        options={groupings} 
-                        selectedOption={grouping} 
-                        onSelectOption={(e) => setGrouping(e.target.value)}
-                    />}
+                    {groupings.length > 0 && (
+                        <DropdownSelector
+                            id="grouping-select"
+                            options={groupings}
+                            selectedOption={grouping}
+                            onSelectOption={(e) => setGrouping(e.target.value)}
+                        />
+                    )}
                 </div>
             </div>
             <div>
-                {currentReport?.length > 0 ? (
+                {currentReport.length > 0 ? (
                     <table className="table">
                         <thead>
                             <tr>
