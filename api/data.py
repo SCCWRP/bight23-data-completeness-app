@@ -70,7 +70,7 @@ def completeness_report_json():
     print("jsondata")
     print(jsondata)
     
-    return jsonify(data = jsondata), 200
+    return jsonify(data = jsondata, ordered_columns = list(data.columns)), 200
 
 
 
@@ -131,25 +131,24 @@ def station_data():
     unfinished_stations = request_data.get('unfinished_stations')
     finished_stations = request_data.get('finished_stations')
 
-    all_stations = [str(stationid).strip() for stationid in all_stations.split(',')] if all_stations is not None else []
-    unfinished_stations = [str(stationid).strip() for stationid in unfinished_stations.split(',')] if unfinished_stations is not None else []
-    finished_stations = [str(stationid).strip() for stationid in finished_stations.split(',')] if finished_stations is not None else []
+    all_stations = [str(x).strip().replace('"','').replace("'",'') for x in all_stations.split(',')] if all_stations is not None else []
+    unfinished_stations = [str(x).strip().replace('"','').replace("'",'') for x in unfinished_stations.split(',')] if unfinished_stations is not None else []
+    finished_stations = [str(x).strip().replace('"','').replace("'",'') for x in finished_stations.split(',')] if finished_stations is not None else []
     
-    all_station_data = pd.read_sql(
-        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(all_stations)}') """
-        , 
-        eng
-    )
-    unfinished_station_data = pd.read_sql(
-        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(unfinished_stations)}') """
-        , 
-        eng
-    )
-    finished_station_data = pd.read_sql(
-        f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(finished_stations)}') """
-        , 
-        eng
-    )
+    all_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(all_stations)}') """
+    print("all_station_sql")
+    print(all_station_sql)
+    all_station_data = pd.read_sql(all_station_sql, eng)
+
+    unfinished_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(unfinished_stations)}') """
+    print("unfinished_station_sql")
+    print(unfinished_station_sql)
+    unfinished_station_data = pd.read_sql(unfinished_station_sql, eng)
+    
+    finished_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(finished_stations)}') """
+    print("finished_station_sql")
+    print(finished_station_sql)
+    finished_station_data = pd.read_sql(finished_station_sql, eng)
      
     return jsonify(
         all_station_data = all_station_data.fillna('').to_dict(orient='records'), 

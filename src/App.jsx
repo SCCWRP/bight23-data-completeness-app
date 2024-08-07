@@ -24,7 +24,8 @@ function App() {
         unfinished_station_data: [],
         finished_station_data: [],
     });
-    const [orderedColumns, setOrderedColumns] = useState([]);
+    const [mainOrderedColumns, setMainOrderedColumns] = useState([]);
+    const [modalOrderedColumns, setModalOrderedColumns] = useState([]);
 
     // Fetch Datatypes
     useEffect(() => {
@@ -76,8 +77,8 @@ function App() {
         fetch(`completeness-report-json?${params.toString()}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data.data);
                 setCurrentReport(data.data);
+                setMainOrderedColumns(data.ordered_columns);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -105,7 +106,7 @@ function App() {
                 unfinished_station_data: data.unfinished_station_data,
                 finished_station_data: data.finished_station_data,
             });
-            setOrderedColumns(data.ordered_columns);
+            setModalOrderedColumns(data.ordered_columns);
             setShowModal(true);
         })
         .catch((error) => {
@@ -146,12 +147,12 @@ function App() {
             </div>
             <div>
                 {currentReport.length > 0 ? (
-                    <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} />
+                    <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} orderedColumns={mainOrderedColumns} />
                 ) : (
                     <p>No data available</p>
                 )}
             </div>
-            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={orderedColumns} />
+            <StationDataModal show={showModal} handleClose={() => setShowModal(false)} stationData={stationData} orderedColumns={modalOrderedColumns} />
         </div>
     );
 }
