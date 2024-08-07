@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from './components/Table';
-import {StationDataModal, LoadingModal} from './components/Modals';
+import { StationDataModal, LoadingModal } from './components/Modals';
 import DropdownSelector from './components/DropdownSelector';
 
 // Styles
@@ -30,33 +30,37 @@ function App() {
 
     // Fetch Datatypes
     useEffect(() => {
-        setLoading(true);
-        fetch('dtypes') // Your API endpoint for fetching datatypes
-            .then((response) => response.json())
-            .then((data) => {
+        const fetchDtypes = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('dtypes'); // Your API endpoint for fetching datatypes
+                const data = await response.json();
                 setDtypes(data.dtypes);
                 // Set current dtype to the first one if available
                 if (data.dtypes.length > 0) {
                     setDtype(data.dtypes[0]);
                 }
-                setLoading(false);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Error:', error);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchDtypes();
     }, []);
 
     // Fetch Groupings
     useEffect(() => {
         if (!dtype) return;
 
-        setLoading(true);
-        const params = new URLSearchParams({ dtype });
+        const fetchGroupings = async () => {
+            setLoading(true);
+            const params = new URLSearchParams({ dtype });
 
-        fetch(`groupings?${params.toString()}`) // Your API endpoint for fetching groupings
-            .then((response) => response.json())
-            .then((data) => {
+            try {
+                const response = await fetch(`groupings?${params.toString()}`); // Your API endpoint for fetching groupings
+                const data = await response.json();
                 setGroupings(data.groupings);
                 // Set current grouping to the first one if available
                 if (data.groupings.length > 0) {
@@ -64,38 +68,43 @@ function App() {
                 } else {
                     setGrouping(''); // Clear grouping if no groupings are available
                 }
-                setLoading(false);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Error:', error);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchGroupings();
     }, [dtype]);
 
     // Fetch data when dtype or grouping is changed
     useEffect(() => {
         if (!dtype || !grouping) return;
 
-        setLoading(true);
-        const params = new URLSearchParams({
-            dtype,
-            grouping,
-        });
+        const fetchReport = async () => {
+            setLoading(true);
+            const params = new URLSearchParams({
+                dtype,
+                grouping,
+            });
 
-        fetch(`completeness-report-json?${params.toString()}`)
-            .then((response) => response.json())
-            .then((data) => {
+            try {
+                const response = await fetch(`completeness-report-json?${params.toString()}`);
+                const data = await response.json();
                 setCurrentReport(data.data);
                 setMainOrderedColumns(data.ordered_columns);
-                setLoading(false);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Error:', error);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchReport();
     }, [dtype, grouping]);
 
-    const handleRowClick = (row) => {
+    const handleRowClick = async (row) => {
         setLoading(true);
         const postData = {
             all_stations: row.dataset.allStations,
@@ -103,15 +112,15 @@ function App() {
             finished_stations: row.dataset.finishedStations,
         };
 
-        fetch('station-data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(postData),
-        })
-        .then((response) => response.json())
-        .then((data) => {
+        try {
+            const response = await fetch('station-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            });
+            const data = await response.json();
             setStationData({
                 all_station_data: data.all_station_data,
                 unfinished_station_data: data.unfinished_station_data,
@@ -119,12 +128,11 @@ function App() {
             });
             setModalOrderedColumns(data.ordered_columns);
             setShowModal(true);
-            setLoading(false);
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error('Error:', error);
+        } finally {
             setLoading(false);
-        });
+        }
     };
 
     const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations'];
