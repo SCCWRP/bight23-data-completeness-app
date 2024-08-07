@@ -146,7 +146,7 @@ function App() {
 
     return (
         <div className="container">
-            <h1>Data Report</h1>
+            <h1>Bight '23 Data Completeness Report</h1>
             <div className="row mb-3">
                 <div className="col-md-6">
                     <label htmlFor="dtype-select">Select Datatype:</label>
