@@ -80,6 +80,22 @@ app.config['REPORT_TYPES'] = {
     },
 }
 
+# Categorizing Datatypes into sediment or trawl
+# This is the path of least resistance
+#  basically used for the sake of querying only trawl field data when the user is looking at missing stations for trawl datatypes, 
+#  and sediment when they are looking at sediment datatypes
+app.config['REPORT_GROUPINGS'] = {
+    'toxicity':'sediment',
+    'chemistry':'sediment',
+    'benthic':'sediment',
+    'microplastics':'sediment',
+    'trawl_field':'trawl',
+    'fish':'trawl',
+    'invert':'trawl',
+    'debris':'trawl',
+    'ptsensor':'trawl'
+}
+
 
 # set the database connection string, database, and type of database we are going to point our application at
 #app.eng = create_engine(os.environ.get("DB_CONNECTION_STRING"))

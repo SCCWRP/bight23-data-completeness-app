@@ -130,22 +130,32 @@ def station_data():
     all_stations = request_data.get('all_stations')
     unfinished_stations = request_data.get('unfinished_stations')
     finished_stations = request_data.get('finished_stations')
+    dtype = request_data.get('dtype')
+    collectiontype = current_app.config.get('REPORT_GROUPINGS').get(dtype)
+
+    print("dtype")
+    print(dtype)
+    print("collectiontype")
+    print(collectiontype)
 
     all_stations = [str(x).strip().replace('"','').replace("'",'') for x in all_stations.split(',')] if all_stations is not None else []
     unfinished_stations = [str(x).strip().replace('"','').replace("'",'') for x in unfinished_stations.split(',')] if unfinished_stations is not None else []
     finished_stations = [str(x).strip().replace('"','').replace("'",'') for x in finished_stations.split(',')] if finished_stations is not None else []
     
     all_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(all_stations)}') """
+    all_station_sql += f""" AND collectiontype = '{str(collectiontype).lower()}' """ if collectiontype is not None else ''
     print("all_station_sql")
     print(all_station_sql)
     all_station_data = pd.read_sql(all_station_sql, eng)
 
     unfinished_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(unfinished_stations)}') """
+    unfinished_station_sql += f""" AND collectiontype = '{str(collectiontype).lower()}' """ if collectiontype is not None else ''
     print("unfinished_station_sql")
     print(unfinished_station_sql)
     unfinished_station_data = pd.read_sql(unfinished_station_sql, eng)
     
     finished_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(finished_stations)}') """
+    finished_station_sql += f""" AND collectiontype = '{str(collectiontype).lower()}' """ if collectiontype is not None else ''
     print("finished_station_sql")
     print(finished_station_sql)
     finished_station_data = pd.read_sql(finished_station_sql, eng)

@@ -30,6 +30,7 @@ function App() {
 
     const [modalTitle, setModalTitle] = useState(''); // Modal title state
 
+
     // Fetch Datatypes
     useEffect(() => {
         const fetchDtypes = async () => {
@@ -84,6 +85,7 @@ function App() {
             all_stations: row.dataset.allStations,
             unfinished_stations: row.dataset.unfinishedStations,
             finished_stations: row.dataset.finishedStations,
+            dtype: dtype
         };
 
         const groupingValue = row.dataset[grouping];
