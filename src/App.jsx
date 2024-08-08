@@ -13,9 +13,9 @@ function App() {
     const [dtypes, setDtypes] = useState([]);
     const [dtype, setDtype] = useState('');
 
-    // Grouping options
-    const [groupings, setGroupings] = useState([]);
-    const [grouping, setGrouping] = useState('');
+    // Grouping options - set to fixed values - agency and stratum
+    const [groupings] = useState(['agency', 'stratum']);
+    const [grouping, setGrouping] = useState(groupings[0]);
 
     const [currentReport, setCurrentReport] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -51,34 +51,6 @@ function App() {
 
         fetchDtypes();
     }, []);
-
-    // Fetch Groupings
-    useEffect(() => {
-        if (!dtype) return;
-
-        const fetchGroupings = async () => {
-            setLoading(true);
-            const params = new URLSearchParams({ dtype });
-
-            try {
-                const response = await fetch(`groupings?${params.toString()}`); // Your API endpoint for fetching groupings
-                const data = await response.json();
-                setGroupings(data.groupings);
-                // Set current grouping to the first one if available
-                if (data.groupings.length > 0) {
-                    setGrouping(data.groupings[0]);
-                } else {
-                    setGrouping(''); // Clear grouping if no groupings are available
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchGroupings();
-    }, [dtype]);
 
     // Fetch data when dtype or grouping is changed
     useEffect(() => {
@@ -116,7 +88,6 @@ function App() {
 
         const groupingValue = row.dataset[grouping];
         const assignedParameter = row.dataset.assignedParameter;
-
 
         try {
             const response = await fetch('station-data', {
@@ -162,16 +133,23 @@ function App() {
                     )}
                 </div>
                 <div className="col-md-6">
-                    <label htmlFor="grouping-select">Select Grouping:</label>
-                    {groupings.length > 0 && (
-                        <DropdownSelector
-                            id="grouping-select"
-                            options={groupings}
-                            selectedOption={grouping}
-                            onSelectOption={(e) => setGrouping(e.target.value)}
-                            onChange={(e) => setGrouping(e.target.value)}
-                        />
-                    )}
+                    <label>Select Grouping:</label>
+                    {groupings.map((group) => (
+                        <div key={group} className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="radio"
+                                name="grouping"
+                                id={`grouping-${group}`}
+                                value={group}
+                                checked={grouping === group}
+                                onChange={(e) => setGrouping(e.target.value)}
+                            />
+                            <label className="form-check-label" htmlFor={`grouping-${group}`}>
+                                {group}
+                            </label>
+                        </div>
+                    ))}
                 </div>
             </div>
             <br />
@@ -179,7 +157,7 @@ function App() {
             <br />
             <div>
                 {currentReport.length > 0 ? (
-                    <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} orderedColumns={mainOrderedColumns} />
+                    <Table data={currentReport} specialKeys={specialKeys} onRowClick={handleRowClick} orderedColumns={mainOrderedColumns} grouping={grouping} />
                 ) : (
                     <p>No data available</p>
                 )}
