@@ -142,6 +142,7 @@ function App() {
         }
     };
 
+    // Columns to not show in the table
     const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations'];
 
     return (
