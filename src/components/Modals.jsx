@@ -37,15 +37,15 @@ export const StationDataModal = ({ show, handleClose, stationData, orderedColumn
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="station-data-modal-body">
-                <Tabs defaultActiveKey="all_stations">
-                    <Tab eventKey="all_stations" title="All Assigned Stations">
-                        <div className="table-responsive">{renderTable(all_station_data)}</div>
-                    </Tab>
+                <Tabs defaultActiveKey="unfinished_stations">
                     <Tab eventKey="unfinished_stations" title="Unfinished Stations">
                         <div className="table-responsive">{renderTable(unfinished_station_data)}</div>
                     </Tab>
                     <Tab eventKey="finished_stations" title="Finished Stations">
                         <div className="table-responsive">{renderTable(finished_station_data)}</div>
+                    </Tab>
+                    <Tab eventKey="all_stations" title="All Assigned Stations">
+                        <div className="table-responsive">{renderTable(all_station_data)}</div>
                     </Tab>
                 </Tabs>
             </Modal.Body>
