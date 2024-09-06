@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Tab, Tabs, Spinner } from 'react-bootstrap';
 
 export const StationDataModal = ({ show, handleClose, stationData, orderedColumns, title = 'Station Data' }) => {
-    const { all_station_data, unfinished_station_data, finished_station_data } = stationData;
+    const { all_station_data, unfinished_station_data, finished_station_data, abandoned_station_data } = stationData;
 
     const renderTable = (data) => {
         if (!data || data.length === 0) return <p>No data available</p>;
@@ -46,6 +46,9 @@ export const StationDataModal = ({ show, handleClose, stationData, orderedColumn
                     </Tab>
                     <Tab eventKey="all_stations" title="All Assigned Stations">
                         <div className="table-responsive">{renderTable(all_station_data)}</div>
+                    </Tab>
+                    <Tab eventKey="abandoned_stations" title="Abandoned Stations">
+                        <div className="table-responsive">{renderTable(abandoned_station_data)}</div>
                     </Tab>
                 </Tabs>
             </Modal.Body>

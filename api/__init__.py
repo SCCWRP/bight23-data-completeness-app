@@ -43,39 +43,85 @@ app.secret_key = os.environ.get("FLASK_APP_SECRET_KEY")
 # Types of reports and their corresponding views
 app.config['REPORT_TYPES'] = {
     'toxicity': {
+        # vw_tox_completion_status_simplified
         'stratum': 'vw_tox_stratum_completeness_report',
         'agency' : 'vw_tox_agency_completeness_report'
     },
     'chemistry': {
+        # vw_chem_completion_status_simplified
         'stratum': 'vw_chem_stratum_completeness_report',
         'agency' : 'vw_chem_agency_completeness_report'
     },
-    'benthic': {
-        'stratum': 'vw_benthic_infauna_stratum_completeness_report',
-        'agency' : 'vw_benthic_infauna_agency_completeness_report'
+    # (Benthic Infauna)
+    'benthic': { 
+        # vw_infauna_completion_status_simplified
+        'stratum': 'vw_infauna_stratum_completeness_report',
+        'agency' : 'vw_infauna_agency_completeness_report'
     },
     'microplastics': {
+        # vw_microplastics_completion_status_simplified
         'stratum': 'vw_microplastics_stratum_completeness_report',
         'agency' : 'vw_microplastics_agency_completeness_report'
     },
+    'grab_field': {
+        # vw_grab_completion_status_simplified
+        'stratum': 'vw_grab_field_stratum_completeness_report',
+        'agency' : 'vw_grab_field_agency_completeness_report'
+    },
+
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_stratum_completeness_report
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_agency_completeness_report
     'trawl_field': {
+        
+        # vw_trawl_data_stratum_completeness_report
         'stratum': 'vw_trawl_field_stratum_completeness_report',
+
+        # vw_trawl_data_agency_completeness_report
         'agency' : 'vw_trawl_field_agency_completeness_report'
     },
+
+
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_stratum_completeness_report
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_agency_completeness_report
     'fish': {
+        
+        # vw_trawl_data_stratum_completeness_report
         'stratum': 'vw_fish_stratum_completeness_report',
+
+        # vw_trawl_data_agency_completeness_report
         'agency' : 'vw_fish_agency_completeness_report'
     },
+
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_stratum_completeness_report
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_agency_completeness_report
     'invert': {
+
+        # vw_trawl_data_stratum_completeness_report
         'stratum': 'vw_invert_stratum_completeness_report',
+
+        # vw_trawl_data_agency_completeness_report
         'agency' : 'vw_invert_agency_completeness_report'
     },
+
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_stratum_completeness_report
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_agency_completeness_report
     'debris': {
+
+        # vw_trawl_data_stratum_completeness_report
         'stratum': 'vw_debris_stratum_completeness_report',
+
+        # vw_trawl_data_agency_completeness_report
         'agency' : 'vw_debris_agency_completeness_report'
     },
+
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_stratum_completeness_report
+    # vw_trawl_completion_status_simplified ---> vw_trawl_data_agency_completeness_report
     'ptsensor': {
+
+        # vw_trawl_data_stratum_completeness_report
         'stratum': 'vw_ptsensor_stratum_completeness_report',
+
+        # vw_trawl_data_agency_completeness_report
         'agency' : 'vw_ptsensor_agency_completeness_report'
     },
 }
@@ -89,6 +135,7 @@ app.config['REPORT_GROUPINGS'] = {
     'chemistry':'sediment',
     'benthic':'sediment',
     'microplastics':'sediment',
+    'grab_field':'sediment',
     'trawl_field':'trawl',
     'fish':'trawl',
     'invert':'trawl',

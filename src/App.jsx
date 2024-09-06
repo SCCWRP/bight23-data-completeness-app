@@ -23,6 +23,7 @@ function App() {
         all_station_data: [],
         unfinished_station_data: [],
         finished_station_data: [],
+        abandoned_station_data: [],
     });
     const [mainOrderedColumns, setMainOrderedColumns] = useState([]);
     const [modalOrderedColumns, setModalOrderedColumns] = useState([]);
@@ -38,6 +39,7 @@ function App() {
             try {
                 const response = await fetch('dtypes'); // Your API endpoint for fetching datatypes
                 const data = await response.json();
+                
                 setDtypes(data.dtypes);
                 // Set current dtype to the first one if available
                 if (data.dtypes.length > 0) {
@@ -85,6 +87,7 @@ function App() {
             all_stations: row.dataset.allStations,
             unfinished_stations: row.dataset.unfinishedStations,
             finished_stations: row.dataset.finishedStations,
+            abandoned_stations: row.dataset.abandonedStations,
             dtype: dtype
         };
 
@@ -104,6 +107,7 @@ function App() {
                 all_station_data: data.all_station_data,
                 unfinished_station_data: data.unfinished_station_data,
                 finished_station_data: data.finished_station_data,
+                abandoned_station_data: data.abandoned_station_data,
             });
             setModalOrderedColumns(data.ordered_columns);
             setModalTitle(`Station Data for ${groupingValue} for the parameter ${assignedParameter}`);
@@ -116,7 +120,7 @@ function App() {
     };
 
     // Columns to not show in the table
-    const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations'];
+    const specialKeys = ['row_id', 'all_stations', 'finished_stations', 'unfinished_stations', 'abandoned_stations'];
 
     return (
         <div className="container">

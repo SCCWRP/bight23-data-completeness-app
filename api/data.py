@@ -57,8 +57,10 @@ def completeness_report_json():
                 n_stations, 
                 n_finished_stations, 
                 percent_completion, 
+                n_abandoned_stations, 
                 unfinished_stations, 
                 finished_stations, 
+                abandoned_stations,
                 all_stations  
             FROM 
                 {report_types.get(dtype).get(grouping)};
@@ -130,6 +132,8 @@ def station_data():
     all_stations = request_data.get('all_stations')
     unfinished_stations = request_data.get('unfinished_stations')
     finished_stations = request_data.get('finished_stations')
+    abandoned_stations = request_data.get('abandoned_stations')
+    
     dtype = request_data.get('dtype')
     collectiontype = current_app.config.get('REPORT_GROUPINGS').get(dtype)
 
@@ -141,6 +145,7 @@ def station_data():
     all_stations = [str(x).strip().replace('"','').replace("'",'') for x in all_stations.split(',')] if all_stations is not None else []
     unfinished_stations = [str(x).strip().replace('"','').replace("'",'') for x in unfinished_stations.split(',')] if unfinished_stations is not None else []
     finished_stations = [str(x).strip().replace('"','').replace("'",'') for x in finished_stations.split(',')] if finished_stations is not None else []
+    abandoned_stations = [str(x).strip().replace('"','').replace("'",'') for x in abandoned_stations.split(',')] if abandoned_stations is not None else []
     
     all_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(all_stations)}') """
     all_station_sql += f""" AND collectiontype = '{str(collectiontype).lower()}' """ if collectiontype is not None else ''
@@ -159,11 +164,18 @@ def station_data():
     print("finished_station_sql")
     print(finished_station_sql)
     finished_station_data = pd.read_sql(finished_station_sql, eng)
+    
+    abandoned_station_sql = f"""SELECT * FROM vw_stationoccupation_assignment_sunmmary WHERE stationid IN ('{"','".join(abandoned_stations)}') """
+    abandoned_station_sql += f""" AND collectiontype = '{str(collectiontype).lower()}' """ if collectiontype is not None else ''
+    print("abandoned_station_sql")
+    print(abandoned_station_sql)
+    abandoned_station_data = pd.read_sql(abandoned_station_sql, eng)
      
     return jsonify(
         all_station_data = all_station_data.fillna('').to_dict(orient='records'), 
         unfinished_station_data = unfinished_station_data.fillna('').to_dict(orient='records'), 
         finished_station_data = finished_station_data.fillna('').to_dict(orient='records'),
+        abandoned_station_data = abandoned_station_data.fillna('').to_dict(orient='records'),
         ordered_columns = list(all_station_data.columns)
     ), 200
 
